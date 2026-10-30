@@ -1,0 +1,3 @@
+jwt:
+  expiration: 3600000
+  secret-key: Ihwjq!BJK3HBjk#21763fg1khbjlbnsdls2hbvekj12kjhbkxlsasa!
