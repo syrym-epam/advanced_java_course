@@ -24,7 +24,7 @@ import com.tutorial.exercise.repositories.ProductRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles("stage")
 class ExerciseApplicationTests {
     
     @Autowired

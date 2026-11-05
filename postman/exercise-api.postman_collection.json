@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "Spring Boot Product Exercise API",
+    "name": "Spring Boot Product Exercise API (With Tests)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -20,8 +20,15 @@
               "listener": "test",
               "script": {
                 "exec": [
-                  "var jsonData = pm.response.json();",
-                  "pm.collectionVariables.set(\"admin_token\", jsonData.token);"
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has token\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('token');",
+                  "    pm.collectionVariables.set(\"admin_token\", jsonData.token);",
+                  "});"
                 ]
               }
             }
@@ -43,8 +50,15 @@
               "listener": "test",
               "script": {
                 "exec": [
-                  "var jsonData = pm.response.json();",
-                  "pm.collectionVariables.set(\"user_token\", jsonData.token);"
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has token\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('token');",
+                  "    pm.collectionVariables.set(\"user_token\", jsonData.token);",
+                  "});"
                 ]
               }
             }
@@ -66,6 +80,22 @@
       "item": [
         {
           "name": "1. Get All Products (User)",
+          "event": [
+            {
+              "listener": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": "{{baseUrl}}/api/products",
@@ -74,6 +104,18 @@
         },
         {
           "name": "2. Get Product By ID (User)",
+          "event": [
+            {
+              "listener": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 404\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": "{{baseUrl}}/api/products/{{product_id}}",
@@ -87,8 +129,16 @@
               "listener": "test",
               "script": {
                 "exec": [
-                  "var jsonData = pm.response.json();",
-                  "if(jsonData.id) { pm.collectionVariables.set(\"product_id\", jsonData.id); }"
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Product created with correct name and id\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.name).to.eql(\"Mechanical Keyboard\");",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.collectionVariables.set(\"product_id\", jsonData.id);",
+                  "});"
                 ]
               }
             }
@@ -108,6 +158,18 @@
         },
         {
           "name": "4. Create Product (Validation Error - 400)",
+          "event": [
+            {
+              "listener": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{baseUrl}}/api/products",
@@ -123,6 +185,22 @@
         },
         {
           "name": "5. Update Product (Admin)",
+          "event": [
+            {
+              "listener": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Name is updated\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.name).to.eql(\"Wireless Mechanical Keyboard\");",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "PUT",
             "url": "{{baseUrl}}/api/products/{{product_id}}",
@@ -138,6 +216,18 @@
         },
         {
           "name": "6. Delete Product (User - Forbidden 403)",
+          "event": [
+            {
+              "listener": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403 Forbidden\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "url": "{{baseUrl}}/api/products/{{product_id}}",
@@ -146,6 +236,18 @@
         },
         {
           "name": "7. Delete Product (Admin - Success 204)",
+          "event": [
+            {
+              "listener": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204 No Content\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "url": "{{baseUrl}}/api/products/{{product_id}}",

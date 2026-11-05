@@ -12,3 +12,12 @@ spring:
 jwt:
   secret-key: mySecretKeyForTestingJwtAuthenticationWithAtLeast256BitsLengthHere!
   expiration: 3600000
+app:
+  security:
+    users:
+      - username: ${PROD_ADMIN_USER}
+        password: ${PROD_ADMIN_PASSWORD} 
+        roles: [ADMIN, USER]
+      - username: ${PROD_STANDARD_USER}
+        password: ${PROD_STANDARD_USER_PASSWORD}
+        roles: [USER]

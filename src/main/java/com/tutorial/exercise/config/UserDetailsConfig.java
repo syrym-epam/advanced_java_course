@@ -1,5 +1,6 @@
 package com.tutorial.exercise.config;
 
+import java.util.stream.Collectors;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,20 +15,21 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 public class UserDetailsConfig {
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder.encode("password"))
-                .roles("ADMIN", "USER")
-                .build();
+    public UserDetailsService userDetailsService(SecurityUsersProperties properties, PasswordEncoder passwordEncoder) {
+        var userDetailsList = properties.getUsers().stream().map(u -> {
+            // If password is already encoded (starts with {bcrypt}), use it directly. Otherwise, encode it.
+            String encodedPassword = u.getPassword().startsWith("{") 
+                ? u.getPassword() 
+                : passwordEncoder.encode(u.getPassword());
 
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder.encode("password"))
-                .roles("USER")
-                .build();
+            return User.builder()
+                    .username(u.getUsername())
+                    .password(encodedPassword)
+                    .roles(u.getRoles().toArray(new String[0]))
+                    .build();
+        }).collect(Collectors.toList());
 
-        return new InMemoryUserDetailsManager(admin, user);
+        return new InMemoryUserDetailsManager(userDetailsList);
     }
 
     @Bean

@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import com.tutorial.exercise.entities.Product;
 
 @DataJpaTest
-@ActiveProfiles("test")
+@ActiveProfiles("stage")
 class ProductRepositoryTest {
 
     @Autowired

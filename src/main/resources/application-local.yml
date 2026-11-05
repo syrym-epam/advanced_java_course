@@ -16,3 +16,12 @@ spring:
 jwt:
   expiration: 3600000
   secret-key: KJo21lkkldnscwW21SJH@bk11qonwdiqbiuYB@Uiyeb1
+app:
+  security:
+    users:
+      - username: admin
+        password: password
+        roles: [ADMIN, USER]
+      - username: user
+        password: password
+        roles: [USER]
