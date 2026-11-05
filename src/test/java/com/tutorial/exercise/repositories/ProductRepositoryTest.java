@@ -1,5 +1,6 @@
 package com.tutorial.exercise.repositories;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import com.tutorial.exercise.entities.Product;
 
 @DataJpaTest
-@ActiveProfiles("test")
+@ActiveProfiles("stage")
 class ProductRepositoryTest {
 
     @Autowired
@@ -21,15 +22,17 @@ class ProductRepositoryTest {
     void testSaveAndFindProduct() {
         Product product = new Product();
         product.setName("Laptop");
-        product.setPrice(1200.0);
+        product.setPrice(new BigDecimal("1200.0"));
 
         Product saved = productRepository.save(product);
 
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getName()).isEqualTo("Laptop");
+        assertThat(saved.getPrice()).isEqualByComparingTo(new BigDecimal("1200.0"));
 
         Optional<Product> found = productRepository.findById(saved.getId());
         assertThat(found).isPresent();
         assertThat(found.get().getName()).isEqualTo("Laptop");
+        assertThat(found.get().getPrice()).isEqualByComparingTo(new BigDecimal("1200.0"));
     }
 }

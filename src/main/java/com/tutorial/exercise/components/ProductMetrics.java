@@ -1,8 +1,9 @@
 package com.tutorial.exercise.components;
 
+import org.springframework.stereotype.Component;
+
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
-import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMetrics {
@@ -11,11 +12,11 @@ public class ProductMetrics {
     private final Counter productDeletedCounter;
 
     public ProductMetrics(MeterRegistry registry) {
-        this.productCreatedCounter = Counter.builder("exercise.products.created")
+        this.productCreatedCounter = Counter.builder("exercise.products.creations")
                 .description("Total number of products created")
                 .register(registry);
 
-        this.productDeletedCounter = Counter.builder("exercise.products.deleted")
+        this.productDeletedCounter = Counter.builder("exercise.products.deletions")
                 .description("Total number of products deleted")
                 .register(registry);
     }
