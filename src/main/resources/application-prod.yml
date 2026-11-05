@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: "${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/product-db}"
+    username: "${SPRING_DATASOURCE_USER:postgres}"
+    password: "${SPRING_DATASOURCE_PASS:postgres}"
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
+jwt:
+  secret-key: mySecretKeyForTestingJwtAuthenticationWithAtLeast256BitsLengthHere!
+  expiration: 3600000

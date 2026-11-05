@@ -1,0 +1,158 @@
+{
+  "info": {
+    "name": "Spring Boot Product Exercise API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "admin_token", "value": "" },
+    { "key": "user_token", "value": "" },
+    { "key": "product_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login as Admin",
+          "event": [
+            {
+              "listener": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"admin_token\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login as Regular User",
+          "event": [
+            {
+              "listener": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"user_token\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"user\",\n    \"password\": \"password\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "1. Get All Products (User)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/products",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          }
+        },
+        {
+          "name": "2. Get Product By ID (User)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/products/{{product_id}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          }
+        },
+        {
+          "name": "3. Create Product (Admin - Success)",
+          "event": [
+            {
+              "listener": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if(jsonData.id) { pm.collectionVariables.set(\"product_id\", jsonData.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/products",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Mechanical Keyboard\",\n    \"price\": 129.99\n}"
+            }
+          }
+        },
+        {
+          "name": "4. Create Product (Validation Error - 400)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/products",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"\",\n    \"price\": -10.00\n}"
+            }
+          }
+        },
+        {
+          "name": "5. Update Product (Admin)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/products/{{product_id}}",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Wireless Mechanical Keyboard\",\n    \"price\": 149.99\n}"
+            }
+          }
+        },
+        {
+          "name": "6. Delete Product (User - Forbidden 403)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/products/{{product_id}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{user_token}}" }]
+          }
+        },
+        {
+          "name": "7. Delete Product (Admin - Success 204)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/products/{{product_id}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,8 +1,10 @@
+server:
+  port: 8080
 spring:
   application:
     name: exercise
   profiles:
-    active: local
+    active: "${SPRING_PROFILES_ACTIVE:dev}"
   security:
     oauth2:
       resourceserver:
@@ -21,6 +23,3 @@ info:
     name: Spring Boot Exercise Application
     description: Homework Tasks for Spring Boot CRUD & Security
     version: 1.0.0
-# jwt:
-#   expiration: 3600000
-#   secret-key: myVerySecretKeyThatIsAtLeast32CharactersLongForHS256Security!

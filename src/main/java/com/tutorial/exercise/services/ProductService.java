@@ -29,6 +29,8 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
+        // Ensure ID is null so Spring Data JPA treats it as a new entity (INSERT instead of MERGE)
+        product.setId(null);
         Product saved = repository.save(product);
         productMetrics.incrementCreated();
         return saved;
@@ -37,7 +39,7 @@ public class ProductService {
     public Optional<Product> updateProduct(Long id, Product details) {
         return repository.findById(id).map(product -> {
             product.setName(details.getName());
-            product.price = details.getPrice();
+            product.setPrice(details.getPrice());
             return repository.save(product);
         });
     }
