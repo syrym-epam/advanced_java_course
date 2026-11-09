@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package com.grpc.demo.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.grpc.demo.grpc";
+option java_outer_classname = "ProductProto";
+ 
+message ProductRequest {
+  int64 id = 1;
+}
+ 
+message ProductResponse {
+  int64 id = 1;
+  string name = 2;
+  string price = 3; 
+}
+ 
+service ProductInfoService {
+  rpc GetProduct (ProductRequest) returns (ProductResponse);
+}

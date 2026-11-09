@@ -1,0 +1,17 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: demo
+  kafka:
+    bootstrap-servers: "${KAFKA_SERVICE_URL:localhost:9092}"
+    properties:
+      schema.registry.url: "${SCHEMA_REGISTRY_URL:http://localhost:8081}"
+    consumer:
+      group-id: microservice
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        specific.avro.reader: false
+        
