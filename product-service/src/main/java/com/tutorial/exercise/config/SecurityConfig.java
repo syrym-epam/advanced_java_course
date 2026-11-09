@@ -36,7 +36,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/api/auth/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/actuator/health/**", "/actuator/prometheus", "/actuator/info").permitAll()
+                .requestMatchers("/actuator/health/**", "/actuator/prometheus", "/actuator/info", "/api/message/**").permitAll()
                 .anyRequest().authenticated()
             )
             .headers(headers -> headers

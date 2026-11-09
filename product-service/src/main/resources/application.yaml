@@ -1,0 +1,39 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: exercise
+  profiles:
+    active: "${SPRING_PROFILES_ACTIVE:dev}"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri:
+  kafka:
+    bootstrap-servers: "${KAFKA_SERVICE_URL:http://localhost:9092}"
+    properties:
+      schema.registry.url: "${SCHEMA_REGISTRY_URL:http://localhost:8081}"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+    consumer:
+      group-id: microservice
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        specific.avro.reader: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+info:
+  app:
+    name: Spring Boot Exercise Application
+    description: Homework Tasks for Spring Boot CRUD & Security
+    version: 1.0.0

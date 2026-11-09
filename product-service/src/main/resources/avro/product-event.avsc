@@ -1,0 +1,10 @@
+{
+  "namespace": "com.tutorial.exercise.avro",
+  "type": "record",
+  "name": "ProductEvent",
+  "fields": [
+    { "name": "id", "type": ["null", "long"], "default": null },
+    { "name": "name", "type": "string" },
+    { "name": "price", "type": "double" }
+  ]
+}
